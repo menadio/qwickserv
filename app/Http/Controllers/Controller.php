@@ -18,7 +18,7 @@ class Controller extends BaseController
      * @param $message
      * @return \Illuminate\Http\Response
      */
-    public function successResponse($data = null, $message = null, $httpCode = 200)
+    public function successResponse($data = null, $message = 'Operation successful.', $httpCode = 200)
     {
         if (is_null($data)) {
 
