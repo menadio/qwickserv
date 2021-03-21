@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -27,7 +28,7 @@ class VerificationController extends Controller
         if ($validation->fails())
             return $this->errorResponse($validation->errors(), 'Validation failed.', 422);
 
-        try {
+        // try {
 
             $user = auth()->user();
             
@@ -38,7 +39,9 @@ class VerificationController extends Controller
             } else {
 
                 // verify user email
+                $active = Status::where('name', 'Active')->first();
                 $user->email_verified_at = now()->toDateTimeString();
+                $user->status_id = $active->id;
                 $user->save();
     
                 return $this->successResponse(
@@ -48,13 +51,12 @@ class VerificationController extends Controller
 
             }
 
+        // } catch (Exception $e) {
             
-        } catch (Exception $e) {
-            
-            Log::error($e->getMessage());
+        //     Log::error($e->getMessage());
 
-            return $this->serverError();
-        }
+        //     return $this->serverError();
+        // }
     }
 
     /**

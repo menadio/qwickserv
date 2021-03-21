@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Status;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -31,8 +32,8 @@ class Controller extends BaseController
 
             return response()->json([
                 'success'   => true,
-                'data'      => $data,
-                'message'   => $message
+                'message'   => $message,
+                'data'      => $data
             ], $httpCode);
 
         }
@@ -58,8 +59,8 @@ class Controller extends BaseController
 
             return response()->json([
                 'success'       => false,
-                'error'         => $error,
-                'message'       => $message
+                'message'       => $message,
+                'error'         => $error
             ], $httpCode);
 
         }
@@ -76,5 +77,21 @@ class Controller extends BaseController
             'success'   => false,
             'message'   => 'Oops! That shouldn\'t happen, please try again later.'
         ], 500);
+    }
+
+    /**
+     * Check if a business is approved
+     * 
+     * @param $business
+     * @return bool
+     */
+    public function isApproved($business)
+    {
+        $approved = Status::where('name', 'Approved')->pluck('id')->first();
+
+        if ($business->status_id === $approved) {
+
+            return true;
+        }
     }
 }
