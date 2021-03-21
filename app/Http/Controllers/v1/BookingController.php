@@ -13,40 +13,74 @@ use Illuminate\Support\Facades\Log;
 class BookingController extends Controller
 {
     /**
-     * Place booking reservation
+     * Get user booking reservations collection 
      * 
-     * @param Business $business
      * @return \Illuminate\Http\Response
      */
-    public function reserve(Business $business)
+    public function reserved()
     {
-        dd($business);
-        // check business status
-        if (!$this->isApproved($business))
-            return $this->errorResponse(null, 'Currently not accepting bookings', 400);
-
-        // place business service reservation
         try {
             
-            $reserved = Status::where('name', 'Reserved')->pluck('id')->first();
-
-            $booking = Booking::create([
-                'user_id'       => auth()->user()->id,
-                'business_id'   => $business->id,
-                'status_id'     => $reserved
-            ]);
+            $reservations = auth()->user()->reservedBookings;
 
             return $this->successResponse(
-                new BookingResource($booking),
-                'Placed reservation successfully',
-                201
+                BookingResource::collection($reservations),
+                'Retrieved reservations successfully'
             );
+
         } catch (\Exception $e) {
             
             Log::error($e->getMessage());
 
             return $this->serverError();
         }
-        
+    }
+
+    /**
+     * Get user active bookings collection
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function active()
+    {
+        try {
+            
+            $activeBookings = auth()->user()->activeBookings;
+    
+            return $this->successResponse(
+                BookingResource::collection($activeBookings),
+                'Retrieved active booking reservation successfully'
+            );
+            
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage());
+
+            return $this->serverError();
+        }
+    }
+
+    /**
+     * Get user completed bookings collection
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function completed()
+    {
+        try {
+            
+            $completedBookings = auth()->user()->completedBookings;
+
+            return $this->successResponse(
+                BookingResource::collection($completedBookings),
+                'Retrieved completed bookings successfully'
+            );
+            
+        } catch (\Exception $e) {
+            
+            Log::error($e->getMessage());
+
+            return $this->serverError();
+        }
     }
 }

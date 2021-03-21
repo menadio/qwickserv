@@ -18,7 +18,10 @@ class BookingResource extends JsonResource
             'id'            => $this->id,
             'user'          => $this->user->first_name . ' ' . $this->user->last_name,
             'business'      => $this->business->name,
-            'fee'           => $this->feee,
+            'services'      => $this->business->services,
+            'fee'           => $this->fee,
+            'charge'        => $this->charge,
+            'payout'        => $this->payout,
             'status'        => strtolower($this->status->name),
             'reservedOn'    => $this->created_at->toDateTimeString()
         ];

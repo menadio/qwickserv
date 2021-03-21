@@ -36,7 +36,7 @@ Route::prefix('v1')->group( function () {
     
         Route::get('business/profile', 'BusinessController@profile'); // get a business profile
 
-        Route::get('business/{business}', 'BusinessController@show'); // get a business details
+        Route::get('business/{business}', 'BusinessController@show')->middleware(['consented']); // get a business details
 
         Route::post('business/{business}/reserve', 'BusinessController@reserve'); // make business reservation
 
@@ -49,6 +49,13 @@ Route::prefix('v1')->group( function () {
         // Route::put('business/{business}/hours', 'BusinessHourController@update'); // update business hours
 
         Route::get('services', 'ServiceController@index'); // get all active services
+
+        // user endpoints
+        Route::get('bookings/reserved', 'BookingController@reserved'); // get user reserved bookings collection
+
+        Route::get('bookings/active', 'BookingController@active'); // get active bookings collection
+
+        Route::get('bookings/completed', 'BookingController@completed'); // get completed bookings collection
 
     });
 

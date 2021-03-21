@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('otp')->default(rand(100000, 999999));
+            $table->integer('otp');
             $table->foreignId('account_type_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('set null');
             $table->boolean('consent')->nullable();
             $table->rememberToken();

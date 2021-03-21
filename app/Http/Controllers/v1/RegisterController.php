@@ -42,6 +42,7 @@ class RegisterController extends Controller
         try {
 
             $acountType = AccountType::where('name', 'Individual')->first();
+            $pending = Status::where('name', 'Pending')->pluck('id')->first();
             
             // create individual user account
             $user = User::create([
@@ -50,7 +51,9 @@ class RegisterController extends Controller
                 'phone'             => $request->phone,
                 'email'             => $request->email,
                 'password'          => Hash::make($request->password),
-                'account_type_id'   => $acountType->id
+                'otp'               => rand(100000, 999999),
+                'account_type_id'   => $acountType->id,
+                'status_id'         => $pending
             ]);
 
             if ($user) {
@@ -108,6 +111,7 @@ class RegisterController extends Controller
             $user = User::create([
                 'email'             => $request->email,
                 'password'          => Hash::make($request->password),
+                'otp'               => rand(100000, 999999),
                 'account_type_id'   => $acountType->id,
                 'status_id'         => $active->id
             ]);

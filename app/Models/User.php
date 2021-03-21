@@ -70,4 +70,31 @@ class User extends Authenticatable
     {
         return $this->hasOne(Business::class)->with('services', 'businessHours');
     }
+
+    /**
+     * Get reserved booking reservations collections
+     */
+    public function reservedBookings()
+    {
+        return $this->hasMany(Booking::class)->where('status_id', 5)
+            ->orderByDesc('id');
+    }
+
+    /**
+     * Get active business bookings collection
+     */
+    public function activeBookings()
+    {
+        return $this->hasMany(Booking::class)->where('status_id', 1)
+            ->orderByDesc('id');
+    }
+
+    /**
+     * Get completed business bookings collection
+     */
+    public function completedBookings()
+    {
+        return $this->hasMany(Booking::class)->where('status_id', 6)
+            ->orderByDesc('id');
+    }
 }
