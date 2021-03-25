@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Models\Business;
+use App\Models\BusinessHour;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BusinessResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class BusinessHourController extends Controller
@@ -16,20 +18,30 @@ class BusinessHourController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Business $business, Request $request)
+    public function update(BusinessHour $businesshour, Request $request)
     {
-        dd ($request);
-
         // validate request data
         $validation = Validator::make($request->all(), [
-            'opens_at'  => ['required'],
-            'closes_at' => ['required']
+            'opens_at'  => ['required', 'date_format:H:i'],
+            'closes_at' => ['required', 'date_format:H:i']
         ]);
 
         if ($validation->fails())
             return $this->errorResponse($validation->errors(), 'Failed validation', 422);
 
-        $businessHours = $business->businessHours;
+        try {
+            
+            $businesshour->update($request->only('opens_at', 'closes_at'));
 
+            return $this->successResponse(
+                new BusinessResource($businesshour->business->load('businessHours')),
+                'Business hour update successful'
+            );
+        } catch (\Exception $e) {
+            
+            Log::error($e->getMessage());
+
+            return $this->serverError();
+        }
     }
 }

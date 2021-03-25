@@ -21,6 +21,8 @@ class UserResource extends JsonResource
             'lastname'          => $this->last_name,
             'phone'             => $this->phone,
             'email_verified'    => is_null($this->email_verified_at) ? false : true,
+            'gender'            => $this->gender,
+            'profileImage'      => (! is_null($this->profile_image)) ? asset('storage') . '/' . $this->profile_image : null,
             'accountType'       => strtolower($this->accountType->name),
             'consent'           => $this->consent,
             'status'            => strtolower($this->status->name),

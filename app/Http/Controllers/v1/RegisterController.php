@@ -66,7 +66,7 @@ class RegisterController extends Controller
                 return response()->json([
                     'success'       => true,
                     'accessToken'   => $token,
-                    // 'data'          => new UserResource($user),
+                    'data'          => new UserResource($user),
                     'message'       => 'Yaay! Your account has been created.'
                 ]);
                 

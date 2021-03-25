@@ -46,16 +46,30 @@ Route::prefix('v1')->group( function () {
 
         Route::post('business/{business}/photos', 'BusinessPhotoController@upload'); // upload business photos
 
-        // Route::put('business/{business}/hours', 'BusinessHourController@update'); // update business hours
+        Route::put('business-hours/{businesshour}', 'BusinessHourController@update'); // update business hours
 
         Route::get('services', 'ServiceController@index'); // get all active services
 
         // user endpoints
+        Route::get('profile', 'UserController@profile'); // get user profile
+
+        Route::put('profile-update', 'UserController@update'); // update user resource
+
+        Route::post('profile/image-update', 'UserController@updateProfileImage'); // update user profile image
+
         Route::get('bookings/reserved', 'BookingController@reserved'); // get user reserved bookings collection
 
         Route::get('bookings/active', 'BookingController@active'); // get active bookings collection
 
         Route::get('bookings/completed', 'BookingController@completed'); // get completed bookings collection
+
+        Route::get('bookings/{booking}', 'BookingController@show'); // get a booking reservation details
+
+        Route::post('bookings/{booking}/release-pay', 'BookingController@releasePay'); // release bookings reservation fee to artisan
+
+        Route::post('bookings/{booking}/review', 'ReviewController@store'); // review a business service
+
+        Route::post('feedback', 'FeedbackController@store'); // allows user leave a feedback
 
     });
 

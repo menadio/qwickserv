@@ -137,7 +137,7 @@ class BusinessController extends Controller
             self::incrementViews($business);
     
             return $this->successResponse(
-                new BusinessViewResource($business->load('photos', 'services', 'businessHours')),
+                new BusinessViewResource($business->load('photos', 'services', 'businessHours', 'reviews')),
                 'Retrieved business successfully.'
             );
         } catch (\Exception $e) {

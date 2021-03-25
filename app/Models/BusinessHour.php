@@ -34,4 +34,12 @@ class BusinessHour extends Model
     {
         return $this->belongsTo(WeekDay::class);
     }
+
+    /**
+     * Get business that owns a business hour
+     */
+    public function business()
+    {
+        return $this->belongsTo(Business::class);
+    }
 }

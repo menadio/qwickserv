@@ -4,21 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Review extends Model
+class Feedback extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    /**
-     * Attributes not mass assignable
+    /** 
+     * Attributes mass assignable
      * 
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = ['user_id', 'subject', 'comment'];
 
     /**
-     * Get review user
+     * Get feedback user
      */
     public function user()
     {

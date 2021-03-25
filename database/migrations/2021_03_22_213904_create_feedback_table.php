@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReviewsTable extends Migration
+class CreateFeedbackTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('feedback', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('set null');
-            $table->foreignId('business_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('set null');
-            $table->text('comment', 150);
-            $table->decimal('rating', 10, 1);
-            $table->softDeletes();
+            $table->string('subject', 30);
+            $table->text('comment', 250);
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('feedback');
     }
 }

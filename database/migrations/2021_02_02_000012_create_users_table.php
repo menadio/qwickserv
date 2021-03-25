@@ -22,6 +22,8 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('otp');
+            $table->string('gender')->nullable();
+            $table->string('profile_image')->nullable();
             $table->foreignId('account_type_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('set null');
             $table->boolean('consent')->nullable();
             $table->rememberToken();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BusinessHourResource extends JsonResource
@@ -17,8 +18,8 @@ class BusinessHourResource extends JsonResource
         return [
             'id'        => $this->id,
             'weekDay'   => $this->weekDay->name,
-            'opens_at'  => $this->opens_at,
-            'closes_at' => $this->closes_at
+            'opens_at'  => (! is_null($this->opens_at)) ? Carbon::parse($this->opens_at)->format('H:i') : null,
+            'closes_at' => (! is_null($this->closes_at)) ? Carbon::parse($this->closes_at)->format('H:i') : null
         ];
     }
 }
