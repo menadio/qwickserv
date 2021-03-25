@@ -27,7 +27,7 @@ class BusinessController extends Controller
             return $this->errorResponse(null, 'You do not own a business.');
 
         return $this->successResponse(
-            new BusinessResource($user->business->load('photos', 'services', 'businessHours')), 
+            new BusinessResource($user->business->load('photos', 'businessHours')), 
             'Retrieved business successfully.'
         );
     }
@@ -64,7 +64,7 @@ class BusinessController extends Controller
             $business->save();
 
             return $this->successResponse(
-                new BusinessResource($business->load('photos', 'services', 'businessHours')),
+                new BusinessResource($business->load('photos', 'businessHours')),
                 'Business cover uplaoded successfully'
             );
             
@@ -106,7 +106,7 @@ class BusinessController extends Controller
             
 
             return $this->successResponse(
-                new BusinessResource($business->load('services', 'businessHours')),
+                new BusinessResource($business->load('businessHours')),
                 'Business record updated successfully'
             );
             
@@ -137,7 +137,7 @@ class BusinessController extends Controller
             self::incrementViews($business);
     
             return $this->successResponse(
-                new BusinessViewResource($business->load('photos', 'services', 'businessHours', 'reviews')),
+                new BusinessViewResource($business->load('photos', 'businessHours', 'reviews')),
                 'Retrieved business successfully.'
             );
         } catch (\Exception $e) {

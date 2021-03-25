@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\BusinessHour;
+use App\Models\WeekDay;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BusinessViewResource extends JsonResource
@@ -14,6 +16,14 @@ class BusinessViewResource extends JsonResource
      */
     public function toArray($request)
     {
+        $day = now()->englishDayOfWeek;
+        $weekday = WeekDay::where('name', $day)->pluck('id')->first();
+        $currentTime = now()->format('H:i');
+        $businessHour = BusinessHour::where([
+            ['business_id', $this->id],
+            ['week_day_id', $weekday],
+        ])->first();
+
         return [
             'id'            => $this->id,
             'name'          => $this->name,
@@ -23,12 +33,12 @@ class BusinessViewResource extends JsonResource
             'logo'          => (! is_null($this->logo)) ? asset('storage') . '/' . $this->logo : null,
             'cover'         => (! is_null($this->cover)) ? asset('storage') . '/' . $this->cover : null,
             'category'      => $this->category->name,
+            'services'      => $this->services,
+            'openNow'       => ($currentTime >= $businessHour->opens_at && $currentTime <= $businessHour->closes_at) ? true : false,
             'rating'        => ($this->reviews->count() === 0) ? 0 : $this->reviews->avg('rating'),
             'no_of_reviews' => $this->reviews->count(),
             'reviews'       => ReviewResource::collection($this->whenLoaded('reviews')),
             'photos'        => BusinessPhotoResource::collection($this->whenLoaded('photos')),
-            'services'      => ServiceResource::collection($this->whenLoaded('services')),
-            'businessHours' => BusinessHourResource::collection($this->whenLoaded('businessHours')),
         ];
     }
 }

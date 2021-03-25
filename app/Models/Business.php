@@ -21,8 +21,11 @@ class Business extends Model
         'address',
         'logo',
         'category_id',
-        'status_id'
+        'status_id',
+        'services'
     ];
+
+    protected $casts = ['services' => 'array'];
 
     /**
      * Business owner
@@ -38,14 +41,6 @@ class Business extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    /**
-     * Services offered by business
-     */
-    public function services()
-    {
-        return $this->belongsToMany(Service::class);
     }
 
     /**

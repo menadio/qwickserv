@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\BusinessHour;
+use App\Models\WeekDay;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BusinessResource extends JsonResource
@@ -14,6 +16,8 @@ class BusinessResource extends JsonResource
      */
     public function toArray($request)
     {
+        
+
         return [
             'id'            => $this->id,
             'user_id'       => $this->user_id,
@@ -31,7 +35,7 @@ class BusinessResource extends JsonResource
             'totalBookings' => $this->bookings->count(),
             'created_at'    => $this->created_at->toDateString(),
             'category'      => ($this->category) ? $this->category->name : null,
-            'services'      => ServiceResource::collection($this->whenLoaded('services')),
+            'services'      => $this->services,
             'businessHours' => BusinessHourResource::collection($this->whenLoaded('businessHours')),
             'photos'        => BusinessPhotoResource::collection($this->whenLoaded('photos')),
         ];

@@ -71,6 +71,9 @@ Route::prefix('v1')->group( function () {
 
         Route::post('feedback', 'FeedbackController@store'); // allows user leave a feedback
 
+        // searching
+        // Route::post('business'); // run a search
+
     });
 
 });

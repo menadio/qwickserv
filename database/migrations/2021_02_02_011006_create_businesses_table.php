@@ -22,6 +22,7 @@ class CreateBusinessesTable extends Migration
             $table->string('logo')->nullable();
             $table->string('cover')->nullable();
             $table->foreignId('category_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('set null');
+            $table->json('services');
             $table->text('description', 150)->nullable();
             $table->foreignId('status_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('set null');
             $table->unsignedInteger('views_count')->default(0);

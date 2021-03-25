@@ -88,6 +88,8 @@ class RegisterController extends Controller
      */
     public function business(Request $request)
     {
+        // dd($request->services);
+
         // validate request data
         $validation = Validator::make($request->all(), [
             'name'          => ['required', 'string'],
@@ -120,38 +122,39 @@ class RegisterController extends Controller
             if ($user) {
                 
                 $business = Business::create([
-                'user_id'       => $user->id,
-                'name'          => ucwords($request->name),
-                'phone'         => $request->phone,
-                'category_id'   => $request->category_id,
-                'status_id'     => $unapproved->id
-            ]);
+                    'user_id'       => $user->id,
+                    'name'          => ucwords($request->name),
+                    'phone'         => $request->phone,
+                    'category_id'   => $request->category_id,
+                    'status_id'     => $unapproved->id,
+                    'services'      => $request->services
+                ]);
 
-            if ($request->logo) {
+                if ($request->logo) {
 
-                $filename = now()->timestamp . '.' . $request->logo->extension();
+                    $filename = now()->timestamp . '.' . $request->logo->extension();
 
-                $path = $request->file('logo')->storeAs('businesses/logos', $filename, 'public');
+                    $path = $request->file('logo')->storeAs('businesses/logos', $filename, 'public');
 
-                $business->logo = $path;
-                $business->save();
-            }
+                    $business->logo = $path;
+                    $business->save();
+                }
 
-            // store business services
-            foreach ($request->services as $service) {
+                // store business services
+                // foreach ($request->services as $service) {
 
-                $business->services()->attach($service);
-            }
+                //     $business->services()->attach($service);
+                // }
 
-            // grant user access token
-            $token = $user->createToken('qwickserv')->plainTextToken;
+                // grant user access token
+                $token = $user->createToken('qwickserv')->plainTextToken;
 
-            return response()->json([
-                'success'       => true,
-                'message'       => 'Yaay! Your account has been created.',
-                'accessToken'   => $token,
-                'data'          => new BusinessResource($business->load('services', 'businessHours'))
-            ], 201);
+                return response()->json([
+                    'success'       => true,
+                    'message'       => 'Yaay! Your account has been created.',
+                    'accessToken'   => $token,
+                    'data'          => new BusinessResource($business->load('services', 'businessHours'))
+                ], 201);
 
             }
             
