@@ -4,12 +4,13 @@ namespace App\Http\Controllers\v1;
 
 use App\Models\Business;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BusinessResource;
+use App\Http\Resources\BusinessProfileResource;
 use App\Http\Resources\BusinessViewResource;
 use App\Models\Booking;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BusinessController extends Controller
@@ -27,9 +28,62 @@ class BusinessController extends Controller
             return $this->errorResponse(null, 'You do not own a business.');
 
         return $this->successResponse(
-            new BusinessResource($user->business->load('photos', 'businessHours')), 
+            new BusinessProfileResource($user->business->load('photos', 'businessHours')), 
             'Retrieved business successfully.'
         );
+    }
+
+    /**
+     * Upload business logo
+     * 
+     * @param Business $business
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadLogo(Business $business, Request $request)
+    {
+        if (auth()->user()->id !== $business->user_id)
+            return $this->errorResponse(null, 'You are not authorized', 401);
+            
+        // validate request data
+        $validation = Validator::make($request->only('logo'), [
+            'logo'  => 'required|mimes:png|max:512'
+        ]);
+
+        if ($validation->fails())
+            return $this->errorResponse($validation->errors(), 'Failed validation', 422);
+
+        try {
+
+            // delete logo if it exist
+            if ( ! is_null($business->logo) ) {
+
+                Storage::disk('public')->delete($business->logo);
+
+                $business->logo = null;
+                $business->save();
+
+            }
+
+            //  upload new business logo
+            $filename = now()->timestamp . '.' . $request->logo->extension();
+
+            $path = $request->file('logo')->storeAs('businesses/logos', $filename, 'public');
+
+            $business->logo = $path;
+            $business->save();
+
+            return $this->successResponse(
+                new BusinessProfileResource($business),
+                'Business logo upload was successful'
+            );
+
+        } catch (\Exception $e) {
+            
+            Log::error($e->getMessage());
+
+            return $this->serverError();
+        }
     }
 
     /**
@@ -47,14 +101,25 @@ class BusinessController extends Controller
 
         // validate request data
         $validation = Validator::make($request->only('cover'), [
-            'cover' => 'required|file|mimes:jpeg,png'
+            'cover' => 'required|file|mimes:jpeg,png|max:512'
         ]);
 
         if ($validation->fails())
             return $this->errorResponse($validation->errors(), 'Failed validation', 422);
 
         try {
+
+            // delete cover if it exist
+            if ( ! is_null($business->cover) ) {
+
+                Storage::disk('public')->delete($business->cover);
+
+                $business->cover = null;
+                $business->save();
+
+            }
             
+            // upload new business cover photo
             $filename = now()->timestamp . '.' . $request->file('cover')->extension();
 
             $path = $request->file('cover')->storeAs('businesses/covers', $filename, 'public');
@@ -64,7 +129,7 @@ class BusinessController extends Controller
             $business->save();
 
             return $this->successResponse(
-                new BusinessResource($business->load('photos', 'businessHours')),
+                new BusinessProfileResource($business->load('photos', 'businessHours')),
                 'Business cover uplaoded successfully'
             );
             
@@ -102,11 +167,11 @@ class BusinessController extends Controller
             return $this->errorResponse($validation->errors(), 'Failed validation', 422);
 
         try {
-            // update business 
             
+            $business->update($request->all());
 
             return $this->successResponse(
-                new BusinessResource($business->load('businessHours')),
+                new BusinessProfileResource($business->load('businessHours')),
                 'Business record updated successfully'
             );
             

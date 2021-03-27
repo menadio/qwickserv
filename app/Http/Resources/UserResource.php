@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'id'                => $this->id,
             'firstname'         => $this->first_name,
             'lastname'          => $this->last_name,
+            'email'             => $this->email,
             'phone'             => $this->phone,
             'email_verified'    => is_null($this->email_verified_at) ? false : true,
             'gender'            => $this->gender,
@@ -26,7 +27,8 @@ class UserResource extends JsonResource
             'accountType'       => strtolower($this->accountType->name),
             'consent'           => $this->consent,
             'status'            => strtolower($this->status->name),
-            'business'          => ($this->business) ? new BusinessResource($this->business) : null,
+            'business'          => $this->business,
+            'business'          => new BusinessResource($this->whenLoaded('business')),
             'createdOn'         => $this->created_at->toDateTimeString()
         ];
     }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group( function () {
 
     // Unauthenticated routes
+
     Route::group(['namespace' => 'App\Http\Controllers\v1'], function ($router) {
 
         Route::post('register', 'RegisterController@individual'); // register new user account
@@ -14,10 +15,14 @@ Route::prefix('v1')->group( function () {
     
         Route::post('login', 'LoginController@login'); // authenticate user
 
+        Route::get('categories', 'CategoryController@index'); // get all categories
+
+        Route::get('categories/{category}', 'CategoryController@show'); // get category resource
     });
 
 
     // Authentucated routes
+
     Route::group(['namespace' => 'App\Http\Controllers\v1', 'middleware' => ['auth:sanctum']], function ($router) {
 
         Route::post('logout', 'LogoutController@logout'); // revoke authenticated user access token
@@ -30,9 +35,8 @@ Route::prefix('v1')->group( function () {
     
         Route::post('consent/reject', 'ConsentController@reject'); // reject terms of use
     
-        Route::get('categories', 'CategoryController@index'); // get all categories
-
-        Route::get('categories/{category}', 'CategoryController@show'); // get category resource
+        
+        // business endpoints
     
         Route::get('business/profile', 'BusinessController@profile'); // get a business profile
 
@@ -40,17 +44,23 @@ Route::prefix('v1')->group( function () {
 
         Route::post('business/{business}/reserve', 'BusinessController@reserve'); // make business reservation
 
+        Route::put('business/{business}/logo', 'BusinessController@uploadLogo'); // upload a business logo
+
         Route::put('business/{business}/upload-cover', 'BusinessController@uploadCover'); // upload a business cover image
 
         Route::put('business/{business}', 'BusinessController@update'); // update a business resource
 
         Route::post('business/{business}/photos', 'BusinessPhotoController@upload'); // upload business photos
 
+        Route::delete('business/{business}/photos/{photo}', 'BusinessPhotoController@delete'); // remove a business photo
+
         Route::put('business-hours/{businesshour}', 'BusinessHourController@update'); // update business hours
 
         Route::get('services', 'ServiceController@index'); // get all active services
 
+        
         // user endpoints
+
         Route::get('profile', 'UserController@profile'); // get user profile
 
         Route::put('profile-update', 'UserController@update'); // update user resource
@@ -69,10 +79,17 @@ Route::prefix('v1')->group( function () {
 
         Route::post('bookings/{booking}/review', 'ReviewController@store'); // review a business service
 
+        
+        // miscellaneous
+        
+        Route::get('business-near-by', 'UserController@nearBy'); // get business near by user
+        
         Route::post('feedback', 'FeedbackController@store'); // allows user leave a feedback
-
+        
+        
         // searching
-        // Route::post('business'); // run a search
+
+        Route::post('search', 'SearchController@search'); // run a search
 
     });
 

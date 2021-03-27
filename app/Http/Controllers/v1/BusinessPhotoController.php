@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BusinessPhoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BusinessPhotoController extends Controller
@@ -25,14 +26,14 @@ class BusinessPhotoController extends Controller
             return $this->errorResponse(null, 'Sorry! You are not authorized', 401);
 
         // business photo limit
-        $photoCount = BusinessPhoto::where('business_id', $business->id)->count();
+        $photoCount = $business->photos->count();
 
         if ($photoCount === 4)
-            return $this->errorResponse(null, 'You have reached the maximum photo limit');
+            return $this->errorResponse(null, 'Your business can have only 4 photos at a time'); 
 
         // validate request data
         $validation = Validator::make($request->all(), [
-            // 'photo'     => 'array|mimes:jpeg,jpg,png'
+            'photo'     => 'required|array|max:512'
         ]);
 
         if ($validation->fails())
@@ -56,6 +57,33 @@ class BusinessPhotoController extends Controller
 
             return $this->successResponse(null, 'Uploaded photos successfully.', 201);
             
+        } catch (\Exception $e) {
+            
+            Log::error($e->getMessage());
+
+            return $this->serverError();
+        }
+    }
+
+    /**
+     * Remove a business photo
+     * 
+     * @param Business $business
+     * @param BusinessPhoto $photo
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Business $business, BusinessPhoto $photo)
+    {
+        try {
+            
+            // dd ($photo->photo);
+
+            $photo->delete();
+
+            Storage::disk('public')->delete($photo->photo);
+
+            return $this->successResponse(null, 'Photo removed successfully');
+
         } catch (\Exception $e) {
             
             Log::error($e->getMessage());

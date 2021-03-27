@@ -95,7 +95,6 @@ class RegisterController extends Controller
             'name'          => ['required', 'string'],
             'phone'         => ['required', 'string'],
             'email'         => ['required', 'email:rfc,dns', 'unique:users'],
-            'password'      => ['required'],
             'category_id'   => ['required', 'integer'],
             'logo'          => ['mimes:png']
         ]);
@@ -112,7 +111,6 @@ class RegisterController extends Controller
             // create business user account
             $user = User::create([
                 'email'             => $request->email,
-                'password'          => Hash::make($request->password),
                 'otp'               => rand(100000, 999999),
                 'account_type_id'   => $acountType->id,
                 'status_id'         => $active->id
@@ -153,7 +151,7 @@ class RegisterController extends Controller
                     'success'       => true,
                     'message'       => 'Yaay! Your account has been created.',
                     'accessToken'   => $token,
-                    'data'          => new BusinessResource($business->load('services', 'businessHours'))
+                    'data'          => new BusinessResource($business->load('businessHours'))
                 ], 201);
 
             }

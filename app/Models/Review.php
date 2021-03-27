@@ -24,4 +24,12 @@ class Review extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get reviews business
+     */
+    public function business()
+    {
+        return $this->belongsTo(Business::class);
+    }
 }

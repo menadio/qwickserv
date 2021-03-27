@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\BusinessHour;
+use App\Http\Resources\BusinessHourResource;
 use App\Models\WeekDay;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -33,8 +34,9 @@ class BusinessViewResource extends JsonResource
             'logo'          => (! is_null($this->logo)) ? asset('storage') . '/' . $this->logo : null,
             'cover'         => (! is_null($this->cover)) ? asset('storage') . '/' . $this->cover : null,
             'category'      => $this->category->name,
-            'services'      => $this->services,
+            'services'      => $this->service_list,
             'openNow'       => ($currentTime >= $businessHour->opens_at && $currentTime <= $businessHour->closes_at) ? true : false,
+            'businessHour'  => new BusinessHourResource($businessHour),
             'rating'        => ($this->reviews->count() === 0) ? 0 : $this->reviews->avg('rating'),
             'no_of_reviews' => $this->reviews->count(),
             'reviews'       => ReviewResource::collection($this->whenLoaded('reviews')),

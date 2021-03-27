@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BusinessResource;
+use App\Models\Business;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -13,8 +15,12 @@ class SearchController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function search(Request $request)
     {
-        dd($request);
+        $businesses = Business::search($request->search)->get();
+
+        return $this->successResponse(
+            BusinessResource::collection($businesses)
+        );
     }
 }

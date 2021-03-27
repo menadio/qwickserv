@@ -38,6 +38,8 @@ class LoginController extends Controller
                 return $this->errorResponse(null, 'The provided credentials are incorrect.', 400);
 
             $token = $user->createToken('qwickserv')->plainTextToken;
+            
+            $data = ($user->account_type === 1) ? $user : $user->load('business');
 
             return response()->json([
                 'success'       => true,

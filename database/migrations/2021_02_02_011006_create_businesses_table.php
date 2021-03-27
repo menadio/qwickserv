@@ -27,6 +27,7 @@ class CreateBusinessesTable extends Migration
             $table->foreignId('status_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('set null');
             $table->unsignedInteger('views_count')->default(0);
             $table->unsignedInteger('search_count')->default(0);
+            $table->unsignedInteger('avg_rating')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

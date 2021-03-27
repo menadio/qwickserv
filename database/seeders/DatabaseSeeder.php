@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CategorySeeder::class,
             ServiceSeeder::class,
-            WeekDaySeeder::class
+            WeekDaySeeder::class,
+            BusinessSeeder::class
         ]);
     }
 }

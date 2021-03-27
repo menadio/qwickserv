@@ -71,7 +71,7 @@ class User extends Authenticatable
      */
     public function business()
     {
-        return $this->hasOne(Business::class)->with('services', 'businessHours');
+        return $this->hasOne(Business::class)->with('businessHours');
     }
 
     /**
