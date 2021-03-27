@@ -28,7 +28,7 @@ class VerificationController extends Controller
         if ($validation->fails())
             return $this->errorResponse($validation->errors(), 'Validation failed.', 422);
 
-        // try {
+        try {
 
             $user = auth()->user();
             
@@ -51,12 +51,12 @@ class VerificationController extends Controller
 
             }
 
-        // } catch (Exception $e) {
+        } catch (Exception $e) {
             
-        //     Log::error($e->getMessage());
+            Log::error($e->getMessage());
 
-        //     return $this->serverError();
-        // }
+            return $this->serverError();
+        }
     }
 
     /**
@@ -69,9 +69,6 @@ class VerificationController extends Controller
         try {
             
             $user = auth()->user();
-
-            $user->otp = rand(100000, 999999);
-            $user->save();
 
             // queue OTP notification
 
