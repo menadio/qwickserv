@@ -91,6 +91,11 @@ Route::prefix('v1')->group( function () {
 
         Route::post('search', 'SearchController@search'); // run a search
 
+        // test
+        Route::post('categories', 'CategoryController@store'); // add new business category
+
+        Route::put('categories/{category}', 'CategoryController@update'); // update a business category
+
     });
 
 });

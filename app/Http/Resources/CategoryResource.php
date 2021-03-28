@@ -18,7 +18,7 @@ class CategoryResource extends JsonResource
             'id'            => $this->id,
             'name'          => $this->name,
             'description'   => $this->description,
-            'icon'          => $this->icon,
+            'icon'          => asset('storage') . '/' . $this->icon,
             'services'      => ServiceResource::collection($this->whenLoaded('services'))
         ];
     }
