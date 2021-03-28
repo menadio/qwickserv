@@ -5,8 +5,10 @@ namespace App\Http\Controllers\v1;
 use App\Models\Business;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BusinessProfileResource;
+use App\Http\Resources\BusinessResource;
 use App\Http\Resources\BusinessViewResource;
 use App\Models\Booking;
+use App\Models\Category;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -273,5 +275,38 @@ class BusinessController extends Controller
         $business->views_count++;
 
         $business->save();
+    }
+
+    /**
+     * Filter business by category
+     * 
+     * 
+     */
+    public function filtered(Category $category)
+    {
+        try {
+
+            $category = Category::find($category->id);
+            
+            if ( is_null($category) )
+                return $this->errorResponse(null, 'Category not found', 404);
+            
+            $businesses = Business::all();
+    
+            $filtered = $businesses->filter(function ($business) use ($category) {
+                return  $business->category_id === $category->id;
+            });
+    
+            return $this->successResponse(
+                BusinessResource::collection($filtered->all()),
+                'Retrieved businesses successfully'
+            );
+
+        } catch (\Exception $e) {
+            
+            Log::error($e->getMessage());
+
+            return $this->serverError();
+        }
     }
 }

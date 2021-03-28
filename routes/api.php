@@ -18,6 +18,9 @@ Route::prefix('v1')->group( function () {
         Route::get('categories', 'CategoryController@index'); // get all categories
 
         Route::get('categories/{category}', 'CategoryController@show'); // get category resource
+
+        Route::get('businesses/category/{category}', 'BusinessController@filtered'); // filter businesses by category
+
     });
 
 
@@ -81,6 +84,7 @@ Route::prefix('v1')->group( function () {
 
         
         // miscellaneous
+
         
         Route::get('business-near-by', 'UserController@nearBy'); // get business near by user
         
