@@ -21,6 +21,10 @@ Route::prefix('v1')->group( function () {
 
         Route::get('businesses/category/{category}', 'BusinessController@filtered'); // filter businesses by category
 
+        Route::post('forgot-password', 'PasswordController@sendResetLink')->name('password.email'); // request password reset link
+
+        Route::post('reset-password', 'PasswordController@resetPassword')->name('password.reset'); // reset user password
+
     });
 
 

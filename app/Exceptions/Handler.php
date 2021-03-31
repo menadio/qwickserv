@@ -39,13 +39,13 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (NotFoundHttpException $e, $request) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success'   => false,
-                    'message'   => 'Model not found'
-                ]);
-            }
-        });
+        // $this->renderable(function (NotFoundHttpException $e, $request) {
+        //     if ($request->expectsJson()) {
+        //         return response()->json([
+        //             'success'   => false,
+        //             'message'   => 'Model not found'
+        //         ]);
+        //     }
+        // });
     }
 }
