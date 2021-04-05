@@ -65,7 +65,19 @@ class Business extends Model
      */
     public function bookings()
     {
-        return $this->hasMany(Booking::class)->orderByDesc('id');
+        return $this->hasMany(Booking::class)
+            ->where('status_id', '<>', 6)
+            ->orderByDesc('id');
+    }
+
+    /**
+     * Get completed business bookings
+     */
+    public function completedBookings()
+    {
+        return $this->hasMany(Booking::class)
+            ->where('status_id', 6)
+            ->orderByDesc('id');
     }
 
     /**

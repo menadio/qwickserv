@@ -65,6 +65,12 @@ Route::prefix('v1')->group( function () {
 
         Route::get('services', 'ServiceController@index'); // get all active services
 
+        Route::get('business/{business}/bookings', 'BusinessController@bookings'); // get all open business bookings
+
+        Route::get('business/{business}/bookings/completed', 'BusinessController@completed'); // get all business completed bookings
+
+        Route::get('business/{business}/reviews', 'BusinessController@reviews'); // get business reviews
+
         
         // user endpoints
 

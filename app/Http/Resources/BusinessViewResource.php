@@ -34,7 +34,7 @@ class BusinessViewResource extends JsonResource
             'logo'          => (! is_null($this->logo)) ? asset('storage') . '/' . $this->logo : null,
             'cover'         => (! is_null($this->cover)) ? asset('storage') . '/' . $this->cover : null,
             'category'      => $this->category->name,
-            'services'      => $this->service_list,
+            'services'      => $this->services,
             'openNow'       => ($currentTime >= $businessHour->opens_at && $currentTime <= $businessHour->closes_at) ? true : false,
             'businessHour'  => new BusinessHourResource($businessHour),
             'rating'        => ($this->reviews->count() === 0) ? 0 : $this->reviews->avg('rating'),
