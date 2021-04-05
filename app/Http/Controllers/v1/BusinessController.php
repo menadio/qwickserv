@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BusinessProfileResource;
 use App\Http\Resources\BusinessViewResource;
+use App\Jobs\UpdateBusinessViewsCount;
 use App\Models\Booking;
 use App\Models\Status;
 use Illuminate\Http\Request;
@@ -199,7 +200,7 @@ class BusinessController extends Controller
                 return $this->errorResponse(null, 'Business is currently ' . strtolower($business->status->name));
             
             // update business views count
-            self::incrementViews($business);
+            UpdateBusinessViewsCount::dispatch($business)->delay(now()->addMinutes(2));
     
             return $this->successResponse(
                 new BusinessViewResource($business->load('photos', 'businessHours', 'reviews')),
@@ -260,18 +261,5 @@ class BusinessController extends Controller
 
             return $this->serverError();
         }
-    }
-
-    /**
-     * Update the number of times a business resource
-     * has been viewed
-     * 
-     * @return void
-     */
-    private static function incrementViews($business)
-    {
-        $business->views_count++;
-
-        $business->save();
     }
 }
