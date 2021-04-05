@@ -8,7 +8,7 @@ use App\Http\Resources\BookingResource;
 use App\Http\Resources\BusinessProfileResource;
 use App\Http\Resources\BusinessResource;
 use App\Http\Resources\BusinessViewResource;
-use App\Http\Resources\ReviewResource;
+use App\Jobs\UpdateBusinessViewsCount;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Status;
@@ -203,7 +203,7 @@ class BusinessController extends Controller
                 return $this->errorResponse(null, 'Business is currently ' . strtolower($business->status->name));
             
             // update business views count
-            self::incrementViews($business);
+            UpdateBusinessViewsCount::dispatch($business)->delay(now()->addMinutes(2));
     
             return $this->successResponse(
                 new BusinessViewResource($business->load('photos', 'businessHours', 'reviews')),
@@ -258,130 +258,6 @@ class BusinessController extends Controller
                     201
                 );
 
-        } catch (\Exception $e) {
-            
-            Log::error($e->getMessage());
-
-            return $this->serverError();
-        }
-    }
-
-    /**
-     * Update the number of times a business resource
-     * has been viewed
-     * 
-     * @return void
-     */
-    private static function incrementViews($business)
-    {
-        $business->views_count++;
-
-        $business->save();
-    }
-
-    /**
-     * Filter business by category
-     * 
-     * 
-     */
-    public function filtered(Category $category)
-    {
-        try {
-
-            $category = Category::find($category->id);
-            
-            if ( is_null($category) )
-                return $this->errorResponse(null, 'Category not found', 404);
-            
-            $businesses = Business::all();
-    
-            $filtered = $businesses->filter(function ($business) use ($category) {
-                return  $business->category_id === $category->id;
-            });
-    
-            return $this->successResponse(
-                BusinessResource::collection($filtered->all()),
-                'Retrieved businesses successfully'
-            );
-
-        } catch (\Exception $e) {
-            
-            Log::error($e->getMessage());
-
-            return $this->serverError();
-        }
-    }
-
-    /**
-     * Get all open bookings for a business
-     * 
-     * @param Business $business
-     * @return \Illuminate\Http\Response
-     */
-    public function bookings(Business $business)
-    {
-        try {
-            
-            if (auth()->user()->id !== $business->id)
-                return $this->errorResponse(null, 'Unauthorized', 401);
-
-            return $this->successResponse(
-                BookingResource::collection($business->bookings),
-                'Successfully retrieved business bookings'
-            );
-
-        } catch (\Exception $e) {
-            
-            Log::error($e->getMessage());
-
-            return $this->serverError();
-        }
-    }
-
-    /**
-     * Get all completed bookings for a business
-     * 
-     * @param Business $business
-     * @return \Illuminate\Http\Response
-     */
-    public function completed(Business $business)
-    {
-        try {
-            
-            if (auth()->user()->id !== $business->id)
-                return $this->errorResponse(null, 'Unauthorized', 401);
-
-            return $this->successResponse(
-                BookingResource::collection($business->completedBookings),
-                'Successfully retrieved business completed bookings'
-            );
-            
-        } catch (\Exception $e) {
-            
-            Log::error($e->getMessage());
-
-            return $this->serverError();
-        }
-    }
-
-    /**
-     * Get all reviews of a business
-     * 
-     * @param Business $business
-     * @return \Illuminate\Http\Response
-     */
-    public function reviews(Business $business)
-    {
-        try {
-            
-            if (auth()->user()->id !== $business->id)
-                return $this->errorResponse(null, 'Unauthorized', 401);
-
-            return $this->successResponse(
-                ReviewResource::collection($business->reviews),
-                'Successfully retrieved business reviews'
-            );
-            
         } catch (\Exception $e) {
             
             Log::error($e->getMessage());
