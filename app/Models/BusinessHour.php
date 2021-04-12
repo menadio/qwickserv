@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Nova\Actions\Actionable;
 
 class BusinessHour extends Model
 {
-    use HasFactory;
+    use HasFactory, Actionable;
 
     /**
      * Attributes not mass assignable

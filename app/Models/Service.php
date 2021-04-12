@@ -16,4 +16,20 @@ class Service extends Model
      */
     protected $guarded = ['id'];
 
+    /**
+     * Get service category
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get service status
+     */
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
 }
