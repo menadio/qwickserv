@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\v1\PaymentController;
 use Illuminate\Support\Facades\Route;
 
+Route::post('payments/webhook', [PaymentController::class, 'webhook']); // handle payment response
 
 Route::prefix('v1')->group( function () {
 
@@ -24,6 +26,7 @@ Route::prefix('v1')->group( function () {
         Route::post('forgot-password', 'PasswordController@sendResetLink')->name('password.email'); // request password reset link
 
         Route::post('reset-password', 'PasswordController@resetPassword')->name('password.reset'); // reset user password
+
 
     });
 
@@ -91,6 +94,8 @@ Route::prefix('v1')->group( function () {
         Route::post('bookings/{booking}/release-pay', 'BookingController@releasePay'); // release bookings reservation fee to artisan
 
         Route::post('bookings/{booking}/review', 'ReviewController@store'); // review a business service
+
+        Route::get('bookings/{booking}/payment', 'PaymentController@makePayment'); // make booking payment
 
         
         // miscellaneous
