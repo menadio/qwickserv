@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\KeyValue;
@@ -103,7 +104,9 @@ class Business extends Resource
 
             HasMany::make('Bookings'),
 
-            HasMany::make('Reviews')
+            HasMany::make('Reviews'),
+
+            HasOne::make('Bank Details', 'businessBank', 'App\Nova\BusinessBank')
         ];
     }
 
