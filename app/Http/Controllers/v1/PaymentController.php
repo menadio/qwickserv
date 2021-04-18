@@ -84,31 +84,37 @@ class PaymentController extends Controller
      */
     public function webhook(Request $request)
     {
-        if ($request->event !== 'charge.success') exit();
+        try {
+            
+            if ($request->event !== 'charge.success') exit();
+    
+            $ref = $request['data']['reference'];
+            $amount = $request['data']['amount'] / 100;
+            $charge = $amount * ( 2 / 100 );
+    
+            // check if payment
+            $payment = Payment::where('reference', $ref)->first();
+    
+            if (!$payment) exit();
+    
+            $booking = Booking::find($payment->booking_id);
+    
+            if (!is_null($booking->fee)) exit();
+    
+            $booking->fee = $amount;
+    
+            $booking->charge = $charge;
+    
+            $booking->payout = $amount - $charge;
+    
+            $booking->save();
+    
+            return $this->successResponse(null);       
 
-        $ref = $request['data']['reference'];
-        $amount = $request['data']['amount'] / 100;
-        $charge = $amount * ( 2 / 100 );
+        } catch (\Exception $e) {
+            
+            Log::error($e->getMessage());
 
-        // check if payment
-        $payment = Payment::where('reference', $ref)->first();
-
-        if (!$payment) exit();
-
-        $booking = Booking::find($payment->booking_id);
-
-        if (!is_null($booking->fee)) exit();
-
-        $booking->fee = $amount;
-
-        $booking->charge = $charge;
-
-        $booking->payout = $amount - $charge;
-
-        $booking->save();
-
-        return $this->successResponse(null);
-
-        
+        }
     }
 }
