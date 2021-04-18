@@ -27,7 +27,7 @@ Route::prefix('v1')->group( function () {
 
         Route::post('reset-password', 'PasswordController@resetPassword')->name('password.reset'); // reset user password
 
-
+        Route::get('banks', 'BankController@index'); // get collection of banks
     });
 
 
@@ -74,6 +74,10 @@ Route::prefix('v1')->group( function () {
 
         Route::get('business/{business}/reviews', 'BusinessController@reviews'); // get business reviews
 
+        Route::get('bank-details', 'BusinessBankController@index'); // get business bank details
+
+        Route::post('bank-details', 'BusinessBankController@store'); // store business bank details
+
         
         // user endpoints
 
@@ -90,6 +94,8 @@ Route::prefix('v1')->group( function () {
         Route::get('bookings/completed', 'BookingController@completed'); // get completed bookings collection
 
         Route::get('bookings/{booking}', 'BookingController@show'); // get a booking reservation details
+
+        Route::post('bookings/{booking}/cancel', 'BookingController@cancel'); // cancel a booking reservation
 
         Route::post('bookings/{booking}/release-pay', 'BookingController@releasePay'); // release bookings reservation fee to artisan
 

@@ -147,4 +147,43 @@ class BookingController extends Controller
             return $this->serverError();
         }
     }
+
+    /**
+     * Cancel a booking reservation
+     * 
+     * @param Booking $booking
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel(Booking $booking)
+    {
+        try {
+            
+            $user = auth()->user();
+
+            if ($booking->user_id !== $user->id)
+                return $this->errorResponse(null, 'Unauthorized', 401);
+
+            $reserved = Status::where('name', 'Reserved')->pluck('id')->first();
+
+            if ($booking->status_id !== $reserved)
+                return $this->errorResponse(
+                    null, 
+                    'Unable to cancel booking. Status is ' . strtolower($booking->status->name)
+                );
+
+            $cancelled = Status::where('name', 'Cancelled')->pluck('id')->first();
+
+            $booking->update(['status_id' => $cancelled]);
+
+            $booking->delete();
+
+            return $this->successResponse(null, 'Reservation cancelled');
+            
+        } catch (\Exception $e) {
+            
+            Log::error($e->getMessage());
+
+            return $this->serverError();
+        }
+    }
 }

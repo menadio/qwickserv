@@ -96,4 +96,12 @@ class Business extends Model
     {
         return $this->belongsTo(Status::class);
     }
+
+    /**
+     * Get business bank
+     */
+    public function businessBank()
+    {
+        return $this->hasOne(BusinessBank::class);
+    }
 }

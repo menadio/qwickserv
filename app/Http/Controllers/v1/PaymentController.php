@@ -96,18 +96,31 @@ class PaymentController extends Controller
             $payment = Payment::where('reference', $ref)->first();
     
             if (!$payment) exit();
+
+            // check if payment has been handled
+            $reserved = Status::where('name', 'Reserved')->pluck('id')->first();
+            $pending = Status::where('name', 'Pending')->pluck('id')->first();
+
+            if ($payment->status_id !== $pending) exit();
     
             $booking = Booking::find($payment->booking_id);
     
-            if (!is_null($booking->fee)) exit();
+            if ($booking->status_id !== $reserved) exit();
+
+            // handle booking reservation payment
+            $paid = Status::where('name', 'Paid')->pluck('id')->first();
     
-            $booking->fee = $amount;
-    
-            $booking->charge = $charge;
-    
-            $booking->payout = $amount - $charge;
-    
-            $booking->save();
+            $booking->update([
+                'fee'       => $amount,
+                'charge'    => $charge,
+                'payout'    => ($amount - $charge),
+                'status_id' => $paid
+            ]);
+
+            $payment->update([
+                'amount'    => $amount,
+                'status_id' => $paid
+            ]);
     
             return $this->successResponse(null);       
 
