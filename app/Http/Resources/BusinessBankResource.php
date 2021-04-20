@@ -16,6 +16,7 @@ class BusinessBankResource extends JsonResource
     {
         return [
             'id'                => $this->id,
+            'bank_id'           => $this->bank_id,
             'bank'              => $this->bank->name,
             'account_name'      => $this->account_name,
             'account_number'    => $this->account_number
