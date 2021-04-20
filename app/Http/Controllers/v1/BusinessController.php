@@ -32,7 +32,7 @@ class BusinessController extends Controller
             return $this->errorResponse(null, 'You do not own a business.');
 
         return $this->successResponse(
-            new BusinessProfileResource($user->business->load('photos', 'businessHours')), 
+            new BusinessProfileResource($user->business->load('photos', 'businessHours', 'businessBank')), 
             'Retrieved business successfully.'
         );
     }

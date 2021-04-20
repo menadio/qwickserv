@@ -34,6 +34,7 @@ class BusinessProfileResource extends JsonResource
             'services'      => $this->services,
             'businessHours' => BusinessHourResource::collection($this->whenLoaded('businessHours')),
             'photos'        => BusinessPhotoResource::collection($this->whenLoaded('photos')),
+            'bank_details'  => new BusinessBankResource($this->whenLoaded('businessBank'))
         ];
     }
 }
