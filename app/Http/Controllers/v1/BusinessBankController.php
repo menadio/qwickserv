@@ -74,12 +74,14 @@ class BusinessBankController extends Controller
 
             $business = $user->business;
 
-            $bankDetails = BusinessBank::create([
-                'business_id'       => $business->id,
-                'bank_id'           => $request->bank_id,
-                'account_name'      => $request->account_name,
-                'account_number'    => $request->account_number
-            ]);
+            $bankDetails = BusinessBank::updateOrCreate(
+                ['business_id'       => $business->id],
+                [
+                    'bank_id'           => $request->bank_id,
+                    'account_name'      => $request->account_name,
+                    'account_number'    => $request->account_number
+                ]
+            );
 
             if ($bankDetails)
                 return $this->successResponse(
