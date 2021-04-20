@@ -109,7 +109,7 @@ class User extends Authenticatable
      */
     public function activeBookings()
     {
-        return $this->hasMany(Booking::class)->where('status_id', 1)
+        return $this->hasMany(Booking::class)->where('status_id', 8)
             ->orderByDesc('id');
     }
 
