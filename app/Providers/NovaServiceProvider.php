@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Nova\Metrics\Bookings;
+use App\Nova\Metrics\Businesses;
+use App\Nova\Metrics\Users;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Nova;
@@ -56,7 +59,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            new Help,
+            (new Users)->width('1/2'),
+            (new Businesses)->width('1/2'),
+            (new Bookings)->width('1/2')
         ];
     }
 

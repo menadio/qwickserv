@@ -2,6 +2,9 @@
 
 namespace App\Nova;
 
+use App\Nova\Metrics\Businesses;
+use App\Nova\Metrics\BusinessPerDay;
+use App\Nova\Metrics\BusinessPerStatus;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\BelongsTo;
@@ -118,7 +121,11 @@ class Business extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+            new Businesses,
+            new BusinessPerDay,
+            new BusinessPerStatus
+        ];
     }
 
     /**
@@ -151,6 +158,15 @@ class Business extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new Actions\ApproveBusiness)
+                ->confirmText('Are you sure you want to approve this business?')
+                ->confirmButtonText('Approve')
+                ->cancelButtonText('Cancel'),
+            (new Actions\DeactivateBusiness)
+                ->confirmText('Are you sure you want to deactivate this business?')
+                ->confirmButtonText('Deactivate')
+                ->cancelButtonText('Cancel'),
+        ];
     }
 }

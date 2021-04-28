@@ -2,6 +2,9 @@
 
 namespace App\Nova;
 
+use App\Nova\Metrics\BookingPerStatus;
+use App\Nova\Metrics\Bookings;
+use App\Nova\Metrics\BookingsPerDay;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Currency;
@@ -90,7 +93,11 @@ class Booking extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+            new Bookings,
+            new BookingsPerDay,
+            new BookingPerStatus
+        ];
     }
 
     /**

@@ -2,7 +2,12 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\DeactivateUser;
+use App\Nova\Metrics\Users;
+use App\Nova\Metrics\UsersPerDay;
+use App\Nova\Metrics\UsersPerStatus;
 use Illuminate\Http\Request;
+use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Gravatar;
@@ -128,7 +133,11 @@ class User extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+            new Users,
+            new UsersPerDay,
+            new UsersPerStatus,
+        ];
     }
 
     /**
@@ -161,6 +170,15 @@ class User extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new Actions\ActivateUser)
+                ->confirmText('Are you sure you want to activate this account?')
+                ->confirmButtonText('Activate')
+                ->cancelButtonText('Cancel'),
+            (new Actions\DeactivateUser)
+                ->confirmText('Are you sure you want to deactivate this account?')
+                ->confirmButtonText('Deactivate')
+                ->cancelButtonText('Cancel'),
+        ];
     }
 }
