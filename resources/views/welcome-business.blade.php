@@ -91,24 +91,13 @@
                 <table width="100%" style="padding: 40px 20px; margin: 0 auto;">
                     <tr>
                         <td>
-                            <p class="message-salutation">Hello,</span></p>
+                            <p class="message-salutation">Hello <span class="bold">{{ $business->name}}</span></p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p class="message-title text-gray">You are receiving this email because we received a password reset request for your account.</p>
-
-                            <br>
-
-                            <p class="message-title text-gray">To continue and reset your password, click 
-                                <a href="{{$resetUrl}}">here</a>
-                            </p>
-
-                            <br>
-
-                            <p>If you did not request a password reset, no further action is required.</p>
-
-                            {{$token}}
+                            <p class="message-title text-gray">We are thrilled to have you on board our platform and your business is now being reviewed.</p>
+                            <p class="message-title text-gray">You will be notified of your business approval status shortly.</p>
                         </td>
                     </tr>
                 </table>

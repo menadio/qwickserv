@@ -7,20 +7,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPassword extends Notification
+class WelcomeUser extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $token;
+    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct($user)
     {
-        $this->token = $token;
+        $this->user = $user;
     }
 
     /**
@@ -42,16 +42,10 @@ class ResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        $env = config('app.env');
-
-        $resetUrl = ($env === 'production') ? 
-            'https://dashboard.qwickserv.com/forget-password?token=' . $this->token :
-            'https://dashboard.qwickserv.com/forget-password?token=' . $this->token;
-
         return (new MailMessage)
             ->from('admin@qwickser.com', 'Qwickserv')
-            ->subject('Reset Password')
-            ->view('reset', ['resetUrl' => $resetUrl, 'token' => $this->token]);
+            ->subject('Welcome')
+            ->view('welcome-user', ['user' => $this->user]);
     }
 
     /**

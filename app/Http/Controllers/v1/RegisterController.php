@@ -11,6 +11,8 @@ use App\Models\AccountType;
 use App\Models\Business;
 use App\Models\Status;
 use App\Models\User;
+use App\Notifications\BusinessRegistered;
+use App\Notifications\WelcomeUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -59,6 +61,7 @@ class RegisterController extends Controller
             if ($user) {
 
                 // queue register notification
+                $user->notify(new WelcomeUser($user));
 
                 // grant user access token
                 $token = $user->createToken('qwickserv')->plainTextToken;
@@ -88,8 +91,6 @@ class RegisterController extends Controller
      */
     public function business(Request $request)
     {
-        // dd($request->services);
-
         // validate request data
         $validation = Validator::make($request->all(), [
             'name'          => ['required', 'string'],
@@ -138,14 +139,11 @@ class RegisterController extends Controller
                     $business->save();
                 }
 
-                // store business services
-                // foreach ($request->services as $service) {
-
-                //     $business->services()->attach($service);
-                // }
-
                 // grant user access token
                 $token = $user->createToken('qwickserv')->plainTextToken;
+
+                // notify business of successful registration
+                $user->notify((new BusinessRegistered($business))->delay(now()->addMinutes(2)));
 
                 return response()->json([
                     'success'       => true,

@@ -18,6 +18,7 @@
             font-size: 16px;
             padding: 10px 0;
             line-height: 160%;
+            font-weight: normal;
         }
         .message-title {
             font-size: 20px;
@@ -91,24 +92,29 @@
                 <table width="100%" style="padding: 40px 20px; margin: 0 auto;">
                     <tr>
                         <td>
-                            <p class="message-salutation">Hello,</span></p>
+                            <p class="message-salutation">Hello <span class="bold">{{ $user->first_name}} {{ $user->last_name }}</span></p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p class="message-title text-gray">You are receiving this email because we received a password reset request for your account.</p>
-
-                            <br>
-
-                            <p class="message-title text-gray">To continue and reset your password, click 
-                                <a href="{{$resetUrl}}">here</a>
+                            <p class="message-title text-gray">You have been successfully registered as a user on our platform.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="message-body">
+                                Kindly verify your email using the OTP below
                             </p>
-
-                            <br>
-
-                            <p>If you did not request a password reset, no further action is required.</p>
-
-                            {{$token}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h2 class="text-custom highlight">{{ $user->otp }}</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="text-gray">Follow this link to gain access to your dashboard <a href="https://dashboard.qwickserv.com/login">qwickserv.com/login</a></p>
                         </td>
                     </tr>
                 </table>
