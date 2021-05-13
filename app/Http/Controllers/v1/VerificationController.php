@@ -6,6 +6,7 @@ use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Status;
+use App\Notifications\WelcomeUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -71,6 +72,7 @@ class VerificationController extends Controller
             $user = auth()->user();
 
             // queue OTP notification
+            $user->notify(new WelcomeUser($user));
 
             return $this->successResponse(null, 'Verification code has been sent to your registerd email.');
 
