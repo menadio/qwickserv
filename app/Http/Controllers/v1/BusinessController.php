@@ -166,13 +166,14 @@ class BusinessController extends Controller
             'logo'          => 'mimes:png',
             'cover'         => 'mimes:jpeg,png',
             'description'   => 'string',
+            'phone'         => 'string'
         ]);
 
         if ($validation->fails())
             return $this->errorResponse($validation->errors(), 'Failed validation', 422);
 
         try {
-            
+
             $business->update($request->all());
 
             return $this->successResponse(

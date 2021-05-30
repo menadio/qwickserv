@@ -22,7 +22,7 @@ class BusinessProfileResource extends JsonResource
             'phone'         => $this->phone,
             'logo'          => (! is_null($this->logo)) ? asset('storage') . '/' . $this->logo : null,
             'cover'         => (! is_null($this->cover)) ? asset('storage') . '/' . $this->cover : null,
-            'description'   => $this->descirption,
+            'description'   => $this->description,
             'status'        => strtolower($this->status->name),
             'rating'        => ( $this->reviews->count() === 0 ) ? 0 : $this->reviews->avg('rating'),
             'views'         => $this->views_count,
