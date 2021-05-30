@@ -24,7 +24,9 @@ class Business extends Model
         'logo',
         'category_id',
         'status_id',
-        'services'
+        'services',
+        'phone',
+        'description'
     ];
 
     protected $casts = ['services' => 'array'];
