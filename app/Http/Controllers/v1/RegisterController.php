@@ -97,7 +97,8 @@ class RegisterController extends Controller
             'phone'         => ['required', 'string'],
             'email'         => ['required', 'email:rfc,dns', 'unique:users'],
             'category_id'   => ['required', 'integer'],
-            'logo'          => ['mimes:png']
+            'logo'          => ['mimes:png'],
+            'password'      => ['required']
         ]);
 
         if ($validation->fails())
@@ -112,6 +113,7 @@ class RegisterController extends Controller
             // create business user account
             $user = User::create([
                 'email'             => $request->email,
+                'password'          => Hash::make($request->password),
                 'otp'               => rand(100000, 999999),
                 'account_type_id'   => $acountType->id,
                 'status_id'         => $active->id
