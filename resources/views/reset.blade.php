@@ -100,15 +100,11 @@
 
                             <br>
 
-                            <p class="message-title text-gray">To continue and reset your password, click 
-                                <a href="{{$resetUrl}}">here</a>
-                            </p>
+                            <p class="message-title text-gray">To continue and reset your password, kindly copy and use the token below</p>
 
                             <br>
 
-                            <p>If you did not request a password reset, no further action is required.</p>
-
-                            {{$token}}
+                            <p><strong>{{$token}}</strong></p>
                         </td>
                     </tr>
                 </table>
