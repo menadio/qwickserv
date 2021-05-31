@@ -46,7 +46,7 @@ class UserController extends Controller
     {
         // validate request data
         $validation = Validator::make($request->only('photo'), [
-            'photo' => 'required|file|mimes:png,jpg|max:512'
+            'photo' => 'required|file|mimes:png,jpg'
         ]);
 
         if ($validation->fails())
