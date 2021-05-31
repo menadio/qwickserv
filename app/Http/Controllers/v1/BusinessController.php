@@ -52,7 +52,7 @@ class BusinessController extends Controller
             
         // validate request data
         $validation = Validator::make($request->only('logo'), [
-            'logo'  => 'required|mimes:png|max:512'
+            'logo'  => 'required|mimes:png,jpg'
         ]);
 
         if ($validation->fails())
@@ -106,7 +106,7 @@ class BusinessController extends Controller
 
         // validate request data
         $validation = Validator::make($request->only('cover'), [
-            'cover' => 'required|file|mimes:jpeg,png|max:512'
+            'cover' => 'required|file|mimes:jpg,png'
         ]);
 
         if ($validation->fails())
